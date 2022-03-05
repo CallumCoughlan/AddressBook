@@ -52,9 +52,10 @@ public class AddBuddyRestController {
     }
 
     @PostMapping("/addBuddyRest")
-    public void addBuddySubmit(@RequestBody AddBuddyRequest addBuddyRequest) {
+    public String addBuddySubmit(@RequestBody AddBuddyRequest addBuddyRequest) {
         AddressBook addressBook = addressBookRepository.findById(addBuddyRequest.getAddressBookId());
         addressBook.addBuddy(new BuddyInfo(addBuddyRequest.getName(), addBuddyRequest.getPhoneNumber()));
         addressBookRepository.save(addressBook);
+        return "addBuddyRest";
     }
 }

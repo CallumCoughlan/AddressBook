@@ -29,9 +29,10 @@ public class AddBuddyController {
     }
 
     @PostMapping("/addBuddy")
-    public void addBuddySubmit(@ModelAttribute long aid, @ModelAttribute BuddyInfo buddyInfo) {
+    public String addBuddySubmit(@ModelAttribute long aid, @ModelAttribute BuddyInfo buddyInfo) {
         addressBookRepository.findById(aid).addBuddy(buddyInfo);
         buddyInfoRepository.save(buddyInfo);
+        return "addBuddy";
     }
 
     @GetMapping("/SPA")

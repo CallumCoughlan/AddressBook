@@ -30,12 +30,7 @@ public class ShowBuddiesController {
     }
 
     @GetMapping("/getBuddies")
-    public void getBuddies1() {
-
-    }
-
-    @PostMapping("/getBuddies")
-    public List<BuddyInfo> getBuddies() {
+    public List<BuddyInfo> getBuddiesSubmit() {
         buddyInfoList = buddyInfoRepository.findAll();
         return buddyInfoList;
     }
