@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src= "https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title> AddressBook </title>
+</head>
+<body>
+    <label for="addressBookName"> Name of AddressBook </label>
+    <input type="text" id="addressBookName" name="addressBookName">
+
+    <label for="addressBookId"> Id of AddressBook </label>
+    <input type="text" id="addressBookId" name="addressBookId">
+
+    <label for="buddyName"> Name of Buddy </label>
+    <input type="text" id="buddyName" name="buddyName">
+
+    <label for="buddyPhone"> PhoneNumber of Buddy </label>
+    <input type="text" id="buddyPhone" name="buddyPhone">
+
+    <label for="buddyId"> Id of Buddy </label>
+    <input type="text" id="buddyId" name="buddyId">
+
+    <button id="addAddressBook"> Create AddressBook </button>
+    <button id="addBuddy"> Add Buddy </button>
+    <button id="removeBuddy"> Remove Buddy </button>
+    <button id="showBuddies"> Show Buddies </button>
+    <div id="buddies"></div>
+<script>
+    let addAddressBookButton = document.getElementById("addAddressBook");
+    let addBuddyButton = document.getElementById("addBuddy");
+    let removeBuddy = document.getElementById("removeBuddy");
+    let showBuddies = document.getElementById("showBuddies");
+
+    addAddressBookButton.onclick = () => {
+        let addressBookNameField = document.getElementById("addressBookName");
+
+        fetch("/addAddressBookRest", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: addressBookNameField.value
+            })
+        });
+
+        updateBuddies(getData())
+    }
+
+    addBuddyButton.onclick = () => {
+        let addressBookIdField = document.getElementById("addressBookId");
+        let buddyNameField = document.getElementById("buddyName");
+        let buddyPhoneField = document.getElementById("buddyPhone");
+
+        fetch("/addBuddyRest", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                addressBookId: addressBookIdField.value,
+                name: buddyNameField.value,
+                phoneNumber: buddyPhoneField.value
+            })
+        });
+
+        updateBuddies(getData())
+    }
+
+    removeBuddy.onclick = () => {
+        let buddyIdField = document.getElementById("buddyId");
+        let addressBookIdField = document.getElementById("addressBookId");
+
+        fetch("/removeBuddyRest", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                buddyId: buddyIdField.value,
+                addressBookId: addressBookIdField
+            })
+        });
+
+        updateBuddies(getData())
+    }
+
+    showBuddies.onclick = () => {
+        let addressBookIdField = document.getElementById("addressBookId");
+
+        fetch("/showBuddies", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                addressBookId: addressBookIdField.value
+            })
+        });
+        updateBuddies(getData())
+    };
+
+    const fetchData = () => {
+        return new Promise((resolve, reject) => (
+            fetch("/getBuddies")
+                .then(res => res.json())
+                .then(data => resolve(data))
+                .catch(err => reject(err))
+        ))
+    }
+
+    function getData() {
+        return fetchData()
+    }
+
+    function updateBuddies(buddyList) {
+        for (let i = 0; i < buddyList.length; i++) {
+            let buddies = document.createElement("div");
+            buddies.innerText = buddyList[i].name + buddyList[i].phoneNumber;
+            document.getElementById("buddies").append(buddies)
+        }
+    }
+</script>
+
+</body>
+</html>
